@@ -30,9 +30,9 @@ class Connector:
     def insert(self, data):
         with open(self.__data_file, 'r+') as f:
             files = json.load(f)
-            files = list(files)
             files.append(data)
             json.dump(files, f)
+        return self.__data_file
 
     def select(self, query):
         """
@@ -75,20 +75,3 @@ class Connector:
 
         except Exception as ex:
             logging.critical(ex)
-
-
-if __name__ == '__main__':
-    logging.basicConfig(level=logging.INFO)
-
-    df = Connector('df.json')
-
-    data_for_file = {'id': 1, 'title': 'tet'}
-
-    df.insert(data_for_file)
-    data_from_file = df.select({'id': 1})
-    assert data_from_file == [data_for_file]
-
-    df.delete({'id': 1})
-
-    logging.info('Try to  assert data_from_file == []')
-    assert data_from_file == []
