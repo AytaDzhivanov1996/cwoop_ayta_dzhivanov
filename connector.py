@@ -15,7 +15,6 @@ class Connector:
         self.__data_file = df
         self.__connect()
 
-
     def __connect(self):
         """
         Проверка на существование файла с данными и
@@ -28,14 +27,12 @@ class Connector:
         except Exception as ex:
             logging.critical(ex)
 
-
-
     def insert(self, data):
         with open(self.__data_file, 'r+') as f:
             files = json.load(f)
+            files = list(files)
             files.append(data)
             json.dump(files, f)
-        return self.__data_file
 
     def select(self, query):
         """
@@ -59,7 +56,6 @@ class Connector:
                     data_from_file.append(d)
         return data_from_file
 
-
     def delete(self, query):
         """
         Удаление записей из файла, которые соответствуют запрос,
@@ -68,7 +64,7 @@ class Connector:
         try:
             with open('df.json', 'r') as f:
                 data = json.loads(f.read())
-            
+
             with open('df.json', 'w') as f:
                 result = None
 
@@ -89,11 +85,10 @@ if __name__ == '__main__':
     data_for_file = {'id': 1, 'title': 'tet'}
 
     df.insert(data_for_file)
-    
-    assert data_from_file == [data_for_file]
-    
-    df.delete({'id': 1})
     data_from_file = df.select({'id': 1})
+    assert data_from_file == [data_for_file]
+
+    df.delete({'id': 1})
 
     logging.info('Try to  assert data_from_file == []')
     assert data_from_file == []
